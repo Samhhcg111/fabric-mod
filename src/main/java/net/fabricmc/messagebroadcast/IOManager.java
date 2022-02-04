@@ -12,6 +12,9 @@ import com.google.gson.GsonBuilder;
 
 public class IOManager {
     public static void genConfig(){
+        if(!Files.exists(Paths.get("./config"))){
+            createConfigFolder();
+        }
         if(!Files.exists(Paths.get("./config/fabric-broadcast.json"))){
             String gson = new GsonBuilder().setPrettyPrinting().create().toJson(new ConfigInstance());
             File file = new File("./config/fabric-broadcast.json");
@@ -29,11 +32,16 @@ public class IOManager {
         }
         return configInstance;
     }
+    public static void createConfigFolder(){
+        try{
+            new File("./config").mkdir();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     public static void write(File file,String json){
         try{
-            if(!file.exists()){
-                file.createNewFile();
-            }
+            file.createNewFile();
         }
         catch(IOException e){
             e.printStackTrace();
