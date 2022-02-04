@@ -44,7 +44,7 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 		// /MessageBroadcast "message"  : Broadcast "message"
 		// /MessageBroadcast reloadConfig : reload configurantion
 		CommandRegistrationCallback.EVENT.register((dispatcher,dedicated)->{
-			dispatcher.register(CommandManager.literal("MessageBroadcast").then(CommandManager.literal("Broadcast").then(CommandManager.argument("message", MessageArgumentType.message()).executes(
+			dispatcher.register(CommandManager.literal("MessageBroadcast").requires(source -> source.hasPermissionLevel(4)).then(CommandManager.literal("Broadcast").then(CommandManager.argument("message", MessageArgumentType.message()).executes(
 				ctx->broadcast(ctx.getSource(),MessageArgumentType.getMessage(ctx,"message"))))
 				).then(CommandManager.literal("reloadConfig").executes(
 				ctx -> {
