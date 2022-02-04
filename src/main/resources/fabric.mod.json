@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "message-broadcast-mod",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "MessageBroadcastMod",
+  "description": "Broadcast messages",
   "authors": [
-    "Me!"
+    "CHUN-CHENG HUNG"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "",
+    "sources": "https://github.com/Samhhcg111/fabric-mod/tree/MessageBroadcastMod-1.18.1"
   },
 
   "license": "CC0-1.0",
@@ -18,12 +18,11 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "server": [
+      "net.fabricmc.messagebroadcast.MessageBroadcast"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
   ],
 
   "depends": {

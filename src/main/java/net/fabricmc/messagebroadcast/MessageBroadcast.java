@@ -29,6 +29,7 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger("message-broadcast-mod");
 	public static ConfigInstance CONFIG;
+	public static final ScheduledExecutorService BroadcastExecutor = Executors.newSingleThreadScheduledExecutor();
 	@Override
 	public void onInitializeServer() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -38,7 +39,7 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 		LOGGER.info("Message-broadcast mod loaded");
 		ServerLifecycleEvents.SERVER_STARTING.register(this::init);
 		ServerLifecycleEvents.SERVER_STARTED.register(this::initRoutineBroadcast);
-
+		ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
 		/*  --------                  Init commands       ----------               */
 		// /MessageBroadcast "message"  : Broadcast "message"
 		// /MessageBroadcast reloadConfig : reload configurantion
@@ -52,15 +53,14 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 					LOGGER.info("[Message-broadcast mod]Reloaded configuration");
 					return Command.SINGLE_SUCCESS;}
 				)));
-		}
-	);
+			}
+		);
 	}
 	public void init(MinecraftServer server){
 		IOManager.genConfig();
 		CONFIG = IOManager.readConfig();
 	}
 	public void initRoutineBroadcast(MinecraftServer server){
-		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 		Runnable r = new Runnable() {
 			int timer_min=0;
 			@Override 
@@ -86,9 +86,12 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 			}
 			
 		};
-		executor.scheduleAtFixedRate(r, 0, 1, TimeUnit.MINUTES);
+		BroadcastExecutor.scheduleAtFixedRate(r, 0, 1, TimeUnit.MINUTES);
 	}
-	
+	public void onShutdown(MinecraftServer server){
+		BroadcastExecutor.shutdown();
+		LOGGER.info("Message-broadcast mod shutdown");
+	}
 	public static int broadcast(ServerCommandSource source,Text message){
 		String m = "§c[特殊公告]"+message.asString();
 		Text announce = Text.of(m);
