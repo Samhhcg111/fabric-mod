@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.fabricmc.messagebroadcast.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "server": [
+    "MessageBroadcastMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
