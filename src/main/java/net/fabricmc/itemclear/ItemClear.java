@@ -79,7 +79,7 @@ public class ItemClear implements DedicatedServerModInitializer {
 				if (timerSec/60>=CONFIG.CycleMinutes){
 					broadcast(server, new LiteralText(CONFIG.AlarmMessage));
 					int secCount = timerSec-CONFIG.CycleMinutes*60;
-					if(secCount>=CONFIG.AlarmSec){
+					if(secCount==CONFIG.AlarmSec){
 						broadcast(server, new LiteralText(CONFIG.ClearMessage));
 						server.getWorlds().forEach(
 							w -> w.getEntitiesByType(EntityType.ITEM, p->{return true;}).forEach(e ->e.setDespawnImmediately())
