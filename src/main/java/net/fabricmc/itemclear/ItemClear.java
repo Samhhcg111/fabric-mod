@@ -84,6 +84,7 @@ public class ItemClear implements DedicatedServerModInitializer {
 						server.getWorlds().forEach(
 							w -> w.getEntitiesByType(EntityType.ITEM, p->{return true;}).forEach(e ->e.setDespawnImmediately())
 						);
+						timerSec=0;
 					}
 				}
 				
