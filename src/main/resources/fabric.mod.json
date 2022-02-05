@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "message-broadcast-mod",
+  "id": "item-clear-mod",
   "version": "${version}",
 
-  "name": "MessageBroadcastMod",
-  "description": "Broadcast messages",
+  "name": "ItemClearMod",
+  "description": "Clear dropped items",
   "authors": [
     "CHUN-CHENG HUNG"
   ],
   "contact": {
     "homepage": "",
-    "sources": "https://github.com/Samhhcg111/fabric-mod/tree/MessageBroadcastMod-1.18.1"
+    "sources": "https://github.com/Samhhcg111/fabric-mod/tree/ItemClear"
   },
 
   "license": "CC0-1.0",
@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "server": [
-      "net.fabricmc.messagebroadcast.MessageBroadcast"
+      "net.fabricmc.itemclear.ItemClear"
     ]
   },
   "mixins": [

@@ -1,4 +1,4 @@
-package net.fabricmc.messagebroadcast;
+package net.fabricmc.itemclear;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,16 +15,16 @@ public class IOManager {
         if(!Files.exists(Paths.get("./config"))){
             createConfigFolder();
         }
-        if(!Files.exists(Paths.get("./config/fabric-broadcast.json"))){
+        if(!Files.exists(Paths.get("./config/ItemClearConfig.json"))){
             String gson = new GsonBuilder().setPrettyPrinting().create().toJson(new ConfigInstance());
-            File file = new File("./config/fabric-broadcast.json");
+            File file = new File("./config/ItemClearConfig.json");
             write(file, gson);
         }
     }
     public static ConfigInstance readConfig(){
         ConfigInstance configInstance;
         try{
-            configInstance = new Gson().fromJson(new FileReader("./config/fabric-broadcast.json"), ConfigInstance.class);
+            configInstance = new Gson().fromJson(new FileReader("./config/ItemClearConfig.json"), ConfigInstance.class);
         }
         catch(IOException e){
             e.printStackTrace();

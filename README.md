@@ -3,20 +3,13 @@
 ## Setup
 
 Work with fabric api
-Config by modifying fabric-broadcast.json:
+Config by modifying ItemClearConfig.json:
     {
-  "messages": [
-    {
-      "time": "00:00", //24hr format
-      "message": "§a[例行性公告]伺服器將於一分鐘後重啟"
-    },
-    {
-      "time": "12:00",  //24hr format
-      "message": "§a[例行性公告]伺服器將於一分鐘後重啟"
-    }
-  ],
-  "CycleMessage": "§a[公告] 這是例行性公告",
-  "CycleMsgMinutes": 5          // cycle time (unit: minute)
+  "EnableMod": true,        
+  "CycleMinutes": 5,          // how long will mod clear dropped item (unit: minute)
+  "AlarmSec": 30,             // the AlarmMessage will send before clear;
+  "AlarmMessage": "§d[注意]將於30秒後清除掉落物",
+  "ClearMessage": "§d[注意]掉落物已清除，感謝你的注意"
 }
 
 ## License
