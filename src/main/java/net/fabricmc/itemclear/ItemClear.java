@@ -77,7 +77,9 @@ public class ItemClear implements DedicatedServerModInitializer {
 					return;
 				}
 				if (timerSec/60>=CONFIG.CycleMinutes){
-					broadcast(server, new LiteralText(CONFIG.AlarmMessage));
+					if(timerSec%60==0&&timerSec/60==CONFIG.CycleMinutes){
+						broadcast(server, new LiteralText(CONFIG.AlarmMessage));
+					}
 					int secCount = timerSec-CONFIG.CycleMinutes*60;
 					if(secCount==CONFIG.AlarmSec){
 						broadcast(server, new LiteralText(CONFIG.ClearMessage));
