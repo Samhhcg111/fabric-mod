@@ -31,6 +31,7 @@ public class ItemClear implements DedicatedServerModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("item-clear-mod");
 	public static ConfigInstance CONFIG;
 	public static final ScheduledExecutorService BroadcastExecutor = Executors.newSingleThreadScheduledExecutor();
+	public int ItemAmount;
 	@Override
 	public void onInitializeServer() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -38,12 +39,14 @@ public class ItemClear implements DedicatedServerModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Item-clear-mod loaded");
+		//regist events
 		ServerLifecycleEvents.SERVER_STARTING.register(this::init);
-		ServerLifecycleEvents.SERVER_STARTED.register(this::initRoutineBroadcast);
+		ServerLifecycleEvents.SERVER_STARTED.register(this::initRoutineEvent);
 		ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
-		/*  --------                  Init commands       ----------               */
+		/*  --------                  regist commands       ----------               */
 		// /ItemClear clear  :  clear dropped item
 		// /ItemClear reloadConfig : reload configurantion
+		// format reference -- https://fabricmc.net/wiki/tutorial:commands
 		CommandRegistrationCallback.EVENT.register((dispatcher,dedicated)->{
 			dispatcher.register(CommandManager.literal("ItemClear").requires(source -> source.hasPermissionLevel(4)
 			).then(CommandManager.literal("reloadConfig").executes(
@@ -68,19 +71,20 @@ public class ItemClear implements DedicatedServerModInitializer {
 			}
 		);
 	}
-	public int ItemAmount;
 	public void init(MinecraftServer server){
-		IOManager.genConfig();
-		CONFIG = IOManager.readConfig();
+		IOManager.genConfig();			   //generate configuration file if it isn't exist
+		CONFIG = IOManager.readConfig();	//read configuration
 	}
-	public void initRoutineBroadcast(MinecraftServer server){
+	public void initRoutineEvent(MinecraftServer server){
 		Runnable r = new Runnable() {
 			int timerSec=0;
 			@Override 
 			public void run(){
+				//if server not running return nothing
 				if(!server.isRunning()){
 					return;
 				}
+				// start 
 				if (timerSec/60>=CONFIG.CycleMinutes){
 					if(timerSec%60==0&&timerSec/60==CONFIG.CycleMinutes){
 						broadcast(server, new LiteralText(CONFIG.AlarmMessage));
@@ -93,10 +97,13 @@ public class ItemClear implements DedicatedServerModInitializer {
 					if(CONFIG.Enable15Countdown&&secCount==CONFIG.AlarmSec-5){
 						broadcast(server, new LiteralText("§d[注意]將於5秒後清除掉落物"));
 					}
+					// clear item after AlarmSec
 					if(secCount==CONFIG.AlarmSec){
 						ItemAmount=0;
 						server.getWorlds().forEach(
-							w -> {
+							//w: world element
+							// -> : java lambda , see https://magiclen.org/java-8-lambda/
+							w -> { 
 								ItemAmount += w.getEntitiesByType(EntityType.ITEM, p->{return true;}).size();
 								w.getEntitiesByType(EntityType.ITEM, p->{return true;}).forEach(e ->e.setDespawnImmediately());
 							}
@@ -112,14 +119,17 @@ public class ItemClear implements DedicatedServerModInitializer {
 		};
 		BroadcastExecutor.scheduleAtFixedRate(r, 30, 1, TimeUnit.SECONDS);
 	}
+	// *NECESSARY* Shutdown thread when server shutdown
 	public void onShutdown(MinecraftServer server){
 		BroadcastExecutor.shutdown();
 		LOGGER.info("Item-clear-mod shutdown");
 	}
+	// broadcast message to every player (Command use)
 	public static int broadcast(ServerCommandSource source,Text message){
 		source.getServer().getPlayerManager().getPlayerList().forEach(playerEntity->playerEntity.sendSystemMessage(message,Util.NIL_UUID));
 		return Command.SINGLE_SUCCESS;
 	}
+	// broadcast message to every player (Rountine use)
 	public static void broadcast(MinecraftServer server,Text message){
 		server.getPlayerManager().getPlayerList().forEach(player -> player.sendSystemMessage(message, Util.NIL_UUID));
 	}

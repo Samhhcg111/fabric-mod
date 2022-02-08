@@ -1,6 +1,7 @@
 package net.fabricmc.itemclear;
 
 public class ConfigInstance {
+    //this class will save as ItemClearConfig.json file
     public boolean EnableMod;
     public boolean Enable15Countdown;
     public int CycleMinutes;
@@ -8,6 +9,7 @@ public class ConfigInstance {
     public String AlarmMessage;
     public String ClearMessage;
     public ConfigInstance(){
+        //init parameters
         EnableMod=true;
         Enable15Countdown=true;
         CycleMinutes=5;
