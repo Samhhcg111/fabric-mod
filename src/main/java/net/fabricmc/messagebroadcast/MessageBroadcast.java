@@ -12,7 +12,6 @@ import net.minecraft.command.argument.MessageArgumentType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
@@ -45,7 +44,7 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 		// /MessageBroadcast reloadConfig : reload configurantion
 		CommandRegistrationCallback.EVENT.register((dispatcher,dedicated)->{
 			dispatcher.register(CommandManager.literal("MessageBroadcast").requires(source -> source.hasPermissionLevel(4)).then(CommandManager.literal("Broadcast").then(CommandManager.argument("message", MessageArgumentType.message()).executes(
-				ctx->broadcast(ctx.getSource(),MessageArgumentType.getMessage(ctx,"message"))))
+				ctx->Specitalbroadcast(ctx.getSource(),MessageArgumentType.getMessage(ctx,"message"))))
 				).then(CommandManager.literal("reloadConfig").executes(
 				ctx -> {
 					CONFIG = IOManager.readConfig(); 	
@@ -55,6 +54,12 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 				)));
 			}
 		);
+		// /InfoMessage : Broad InfoMessage
+		CommandRegistrationCallback.EVENT.register((dispatcher,dedicated)->{
+			dispatcher.register(CommandManager.literal("InfoMessage").executes(
+				ctx-> broadcast(ctx.getSource(),Text.of(CONFIG.InfoMessage))
+			));
+		});
 	}
 	public void init(MinecraftServer server){
 		IOManager.genConfig();
@@ -68,19 +73,22 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 				if(!server.isRunning()){
 					return;
 				}
+				//Check time and broadcast message
 				Calendar now = Calendar.getInstance();
 				for(Message m : CONFIG.messages){
 					String time_s[] = m.time.split(":");
 					int m_hr=Integer.parseInt(time_s[0]);					
 					int m_min=Integer.parseInt(time_s[1]);
 					if (m_hr == now.get(Calendar.HOUR_OF_DAY) && m_min == now.get(Calendar.MINUTE)){
-						server.getPlayerManager().getPlayerList().forEach(playerEntity -> playerEntity.sendSystemMessage(new LiteralText(m.message),Util.NIL_UUID));
+						broadcast(server, Text.of(m.message));
 					}				
 				}
-				
+				//broadcast cyclemessage
 				if(timer_min>CONFIG.CycleMsgMinutes){
 					timer_min = 0;
-					server.getPlayerManager().getPlayerList().forEach(player -> player.sendSystemMessage(new LiteralText(CONFIG.CycleMessage), Util.NIL_UUID));
+					if(CONFIG.EnableCycleMsgMinutes){
+						broadcast(server, Text.of(CONFIG.CycleMessage));
+					}
 				}
 				timer_min+=1;
 			}
@@ -92,10 +100,21 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 		BroadcastExecutor.shutdown();
 		LOGGER.info("Message-broadcast mod shutdown");
 	}
-	public static int broadcast(ServerCommandSource source,Text message){
+	public static int Specitalbroadcast(ServerCommandSource source,Text message){
 		String m = "§c[特殊公告]"+message.asString();
 		Text announce = Text.of(m);
 		source.getServer().getPlayerManager().getPlayerList().forEach(playerEntity->playerEntity.sendSystemMessage(announce,Util.NIL_UUID));
+		return Command.SINGLE_SUCCESS;
+	}
+	public static void broadcast(MinecraftServer server , Text text){
+		server.getPlayerManager().getPlayerList().forEach(player ->{
+			player.sendSystemMessage(text, Util.NIL_UUID);
+		});
+	}
+	public static int broadcast(ServerCommandSource source,Text text){
+		source.getServer().getPlayerManager().getPlayerList().forEach(player->{
+			player.sendSystemMessage(text, Util.NIL_UUID);
+		});
 		return Command.SINGLE_SUCCESS;
 	}
 }
