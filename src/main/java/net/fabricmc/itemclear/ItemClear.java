@@ -54,16 +54,21 @@ public class ItemClear implements DedicatedServerModInitializer {
 					return Command.SINGLE_SUCCESS;}
 				)).then(CommandManager.literal("clear").executes(
 					ctx -> {
-						broadcast(ctx.getSource(), Text.of(CONFIG.ClearMessage));
+						ItemAmount = 0;
 						ctx.getSource().getServer().getWorlds().forEach(
-							world -> world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), p->{return true;}).forEach(e ->e.setDespawnImmediately())
+							world -> {
+								ItemAmount += world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), p->{return true;}).size();
+								world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), p->{return true;}).forEach(e ->e.setDespawnImmediately());
+							}
 						);
+						broadcast(ctx.getSource().getServer(), new LiteralText(CONFIG.ClearMessage+"(數量: "+Integer.toString(ItemAmount)+" )"));
 						return Command.SINGLE_SUCCESS;
 					}
 				)));
 			}
 		);
 	}
+	public int ItemAmount;
 	public void init(MinecraftServer server){
 		IOManager.genConfig();
 		CONFIG = IOManager.readConfig();
@@ -89,10 +94,14 @@ public class ItemClear implements DedicatedServerModInitializer {
 						broadcast(server, new LiteralText("§d[注意]將於5秒後清除掉落物"));
 					}
 					if(secCount==CONFIG.AlarmSec){
-						broadcast(server, new LiteralText(CONFIG.ClearMessage));
+						ItemAmount=0;
 						server.getWorlds().forEach(
-							w -> w.getEntitiesByType(EntityType.ITEM, p->{return true;}).forEach(e ->e.setDespawnImmediately())
+							w -> {
+								ItemAmount += w.getEntitiesByType(EntityType.ITEM, p->{return true;}).size();
+								w.getEntitiesByType(EntityType.ITEM, p->{return true;}).forEach(e ->e.setDespawnImmediately());
+							}
 						);
+						broadcast(server, new LiteralText(CONFIG.ClearMessage+"(數量: "+Integer.toString(ItemAmount)+" )"));
 						timerSec=0;
 					}
 				}
