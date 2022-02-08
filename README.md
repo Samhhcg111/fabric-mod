@@ -6,8 +6,9 @@ Work with fabric api
 Config by modifying ItemClearConfig.json:
     {
   "EnableMod": true,        
+  "Enable15Countdown":       // Enable 15sec countdown
   "CycleMinutes": 5,          // how long will mod clear dropped item (unit: minute)
-  "AlarmSec": 30,             // the AlarmMessage will send before clear;
+  "AlarmSec": 30,             // the AlarmMessage will send before clear(should >=30);
   "AlarmMessage": "§d[注意]將於30秒後清除掉落物",
   "ClearMessage": "§d[注意]掉落物已清除，感謝你的注意"
 }

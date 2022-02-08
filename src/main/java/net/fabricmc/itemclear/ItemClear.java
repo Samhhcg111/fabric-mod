@@ -81,6 +81,13 @@ public class ItemClear implements DedicatedServerModInitializer {
 						broadcast(server, new LiteralText(CONFIG.AlarmMessage));
 					}
 					int secCount = timerSec-CONFIG.CycleMinutes*60;
+					if(CONFIG.Enable15Countdown&&CONFIG.AlarmSec<30){CONFIG.AlarmSec=30;LOGGER.info("[Item-clear-mod]AlarmSec too small , reset to 30");}
+					if(CONFIG.Enable15Countdown&&secCount==CONFIG.AlarmSec-15){
+						broadcast(server, new LiteralText("§d[注意]將於15秒後清除掉落物"));
+					}
+					if(CONFIG.Enable15Countdown&&secCount==CONFIG.AlarmSec-5){
+						broadcast(server, new LiteralText("§d[注意]將於5秒後清除掉落物"));
+					}
 					if(secCount==CONFIG.AlarmSec){
 						broadcast(server, new LiteralText(CONFIG.ClearMessage));
 						server.getWorlds().forEach(
