@@ -57,7 +57,10 @@ public class MessageBroadcast implements DedicatedServerModInitializer {
 		// /InfoMessage : Broad InfoMessage
 		CommandRegistrationCallback.EVENT.register((dispatcher,dedicated)->{
 			dispatcher.register(CommandManager.literal("InfoMessage").executes(
-				ctx-> broadcast(ctx.getSource(),Text.of(CONFIG.InfoMessage))
+				ctx-> {
+					ctx.getSource().getPlayer().sendSystemMessage(Text.of(CONFIG.InfoMessage), Util.NIL_UUID);
+					return Command.SINGLE_SUCCESS;
+				}
 			));
 		});
 	}
