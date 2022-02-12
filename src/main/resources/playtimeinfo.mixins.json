@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.fabricmc.playtimeInfo.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "IAccessPlayerManager",
+    "PlayerListS2CPacketMixin_AFKDisplay",
+    "PlayerManagerMixin_StartAFKDetection",
+    "ServerPlayerEntityMixin_DataStroage",
+    "ServerPlayNetworkHandlerMixin_TimeTracker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

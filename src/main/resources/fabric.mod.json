@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "playtimeinfo",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "PlaytimeInfo Mod",
+  "description": "Recode playtime and display afk",
   "authors": [
     "Me!"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/Samhhcg111/fabric-mod",
+    "sources": "https://github.com/Samhhcg111/fabric-mod"
   },
 
   "license": "CC0-1.0",
@@ -18,12 +18,12 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "server": [
+      "net.fabricmc.playtimeInfo.PlaytimeInfo"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "playtimeinfo.mixins.json"
   ],
 
   "depends": {
