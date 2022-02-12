@@ -87,10 +87,10 @@ public class PlaytimeInfo implements DedicatedServerModInitializer {
 	}
 	private static String PlaytimeMsg="";
 	public static int getPlayTime(ServerCommandSource source,Collection<? extends net.minecraft.entity.Entity> entities){
-		PlaytimeMsg="";
+		PlaytimeMsg="§6";
 		entities.forEach(e->{
 			AFKPlayer afkPlayer = (AFKPlayer)e;
-			PlaytimeMsg +=e.getDisplayName().asString()+"§6 : ";
+			PlaytimeMsg +=e.getDisplayName().getString()+" : ";
 			if(afkPlayer !=null){
 				PlaytimeMsg += TimeTransform.prettyform(afkPlayer.getPlaytime());
 				PlaytimeMsg += "\n(Tem)"+TimeTransform.prettyform(afkPlayer.getTempPlaytime())+"\n";
@@ -106,10 +106,10 @@ public class PlaytimeInfo implements DedicatedServerModInitializer {
 		return Command.SINGLE_SUCCESS;
 	}
 	public static int getAllPlayTime(ServerCommandSource source){
-		PlaytimeMsg="";
+		PlaytimeMsg="§6";
 		source.getServer().getPlayerManager().getPlayerList().forEach(e->{
 			AFKPlayer afkPlayer = (AFKPlayer)e;
-			PlaytimeMsg +=e.getDisplayName().asString()+"§6 : ";
+			PlaytimeMsg +=e.getDisplayName().getString()+" : ";
 			if(afkPlayer !=null){
 				PlaytimeMsg += TimeTransform.prettyform(afkPlayer.getPlaytime());
 				PlaytimeMsg += "\n(Tem)"+TimeTransform.prettyform(afkPlayer.getTempPlaytime())+"\n";
