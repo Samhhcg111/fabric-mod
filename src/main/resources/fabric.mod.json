@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "the-fabric-warp",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "TheFabricWarpMod",
+  "description": "Set warp points",
   "authors": [
-    "Me!"
+    "Samhhcg111"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/Samhhcg111/fabric-mod.git",
+    "sources": "https://github.com/Samhhcg111/fabric-mod.git"
   },
 
   "license": "CC0-1.0",
@@ -18,13 +18,10 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "server": [
+      "net.fabricmc.thefabricwarp.TheFabricWarp"
     ]
   },
-  "mixins": [
-    "modid.mixins.json"
-  ],
 
   "depends": {
     "fabricloader": ">=0.12.12",
