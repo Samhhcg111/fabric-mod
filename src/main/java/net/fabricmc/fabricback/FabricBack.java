@@ -34,8 +34,8 @@ public class FabricBack implements DedicatedServerModInitializer {
 	public static int goBack(ServerCommandSource source){
 		try{
 			BackPlayerData data = (BackPlayerData)source.getPlayer();
-			if(!data.hasPos()||data.getbackWorld()==null){
-				source.getPlayer().sendSystemMessage(Text.of("§6你可能處於指令殺或虛空殺，回不去了，Sorry"), Util.NIL_UUID);
+			if(data.getbackWorld()==null){
+				source.getPlayer().sendSystemMessage(Text.of("§6你可能沒死過？"), Util.NIL_UUID);
 				return Command.SINGLE_SUCCESS;
 			}
 			Thread tp = new Thread(new Teleport(source.getPlayer(), data.getbackWorld(), data.getbackX(), data.getbackY(), data.getbackZ(), 0,0));

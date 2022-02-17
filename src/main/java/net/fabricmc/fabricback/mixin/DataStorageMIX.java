@@ -4,7 +4,6 @@ import net.fabricmc.fabricback.BackPlayerData;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Vec3d;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,7 +18,6 @@ public class DataStorageMIX implements BackPlayerData{
 	@Unique private int backX;
 	@Unique private int backY;
     @Unique private int backZ;
-	@Unique private boolean hasPos;
 	@Override
 	public String getbackWorld(){
 		return this.backWorld;
@@ -39,10 +37,6 @@ public class DataStorageMIX implements BackPlayerData{
 	public int getbackZ(){
 		return this.backZ;
 	}
-	@Override
-	public boolean hasPos(){
-		return this.hasPos;
-	}
 	@Inject(
 		method = "onDeath",
 		at = @At(
@@ -50,16 +44,11 @@ public class DataStorageMIX implements BackPlayerData{
 		)
 	)
 	private void updatePos(DamageSource source,CallbackInfo ci){
-		Vec3d pos = source.getPosition();
-		if(pos!=null){
-			this.hasPos=true;
-			this.backX=(int)pos.x;
-			this.backY=(int)pos.y;
-			this.backZ=(int)pos.z;
-			this.backWorld=source.getAttacker().getWorld().getRegistryKey().getValue().toString();
-		}else{
-			this.hasPos=false;
-		}
+		ServerPlayerEntity player = ((ServerPlayerEntity)(Object)this);
+		this.backWorld=player.getWorld().getRegistryKey().getValue().toString();
+		this.backX=player.getBlockX();
+		this.backY=player.getBlockY();
+		this.backZ=player.getBlockZ();
 	}
 	@Inject(
 		method = "writeCustomDataToNbt",
@@ -73,7 +62,6 @@ public class DataStorageMIX implements BackPlayerData{
 			tag.putInt("DeathX", this.backX);
 			tag.putInt("DeathY", this.backY);
 			tag.putInt("DeathZ", this.backZ);
-			tag.putBoolean("HasDeathPos", this.hasPos);
 		}
 	}
 
@@ -96,9 +84,6 @@ public class DataStorageMIX implements BackPlayerData{
 		if (tag.contains("DeathZ")) {
 			this.backZ = tag.getInt("DeathZ");
 		}
-		if(tag.contains("HasDeathPos")){
-			this.hasPos=tag.getBoolean("HasDeathPos");
-		}
 	}
 
 	@Inject(
@@ -112,7 +97,6 @@ public class DataStorageMIX implements BackPlayerData{
 		this.backX=((BackPlayerData)oldPlayer).getbackX();
 		this.backY=((BackPlayerData)oldPlayer).getbackY();
 		this.backZ=((BackPlayerData)oldPlayer).getbackZ();
-		this.hasPos=((BackPlayerData)oldPlayer).hasPos();
 	}
 
 }
