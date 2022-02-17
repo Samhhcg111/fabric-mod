@@ -1,8 +1,8 @@
-# Fabric Example Mod
+# Fabric FabricBack Mod
 
-## Setup
+## description
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+support /back command that teleport to death
 
 ## License
 

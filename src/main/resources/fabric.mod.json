@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "fabric-back",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Fabric Back Mod",
+  "description": "Back to death position",
   "authors": [
-    "Me!"
+    "Samhhcg111"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
@@ -18,12 +18,12 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "server": [
+      "net.fabricmc.fabricback.FabricBack"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "fabric-back.mixins.json"
   ],
 
   "depends": {
