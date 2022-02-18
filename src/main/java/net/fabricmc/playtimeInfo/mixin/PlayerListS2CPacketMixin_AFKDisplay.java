@@ -4,6 +4,7 @@ import net.fabricmc.playtimeInfo.AFKPlayer;
 import net.fabricmc.playtimeInfo.PlaytimeInfo;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,8 +24,9 @@ abstract class PlayerListS2CPacketMixin_AFKDisplay {
             ServerPlayerEntity player = PlaytimeInfo.SERVER.getPlayerManager().getPlayer(((PlayerListS2CPacket.Entry)(Object)this).getProfile().getId());
             if (player != null && ((AFKPlayer) player).isAfk()) {
                 System.out.println(player.getEntityName()+" is afk");
-                String afkName = player.getDisplayName().copy().getString();
+                String afkName = player.getEntityName();
                 cir.setReturnValue(Text.of("§7"+afkName +"(AFK)"));
+                player.sendSystemMessage(Text.of("你已進入掛機狀態"), Util.NIL_UUID);
             }
         }
 }
