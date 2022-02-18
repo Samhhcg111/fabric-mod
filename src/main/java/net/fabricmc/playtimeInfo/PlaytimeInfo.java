@@ -1,6 +1,8 @@
 package net.fabricmc.playtimeInfo;
 
 import java.util.Collection;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.LongArgumentType;
@@ -27,13 +29,15 @@ public class PlaytimeInfo implements DedicatedServerModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger("playtimeinfo");
 	public static MinecraftServer SERVER;
+	public static final ScheduledExecutorService executer= Executors.newSingleThreadScheduledExecutor();
 	@Override
 	public void onInitializeServer() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		LOGGER.info("PlaytimeInfo mod loaded");
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> SERVER=server);
+		// ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
+		ServerLifecycleEvents.SERVER_STARTING.register(this::init);
 		//######### commands handle #############
 		// /playtime time :       			get playtime
 		// /playtime temTime :				get templaytime
@@ -60,8 +64,31 @@ public class PlaytimeInfo implements DedicatedServerModInitializer {
 				)))
 				).then(CommandManager.literal("temtime").then(CommandManager.argument("target",EntityArgumentType.player()).then(CommandManager.argument("minutes",LongArgumentType.longArg()).executes(
 					ctx -> setTemtime(ctx.getSource(), EntityArgumentType.getPlayer(ctx, "target"), LongArgumentType.getLong(ctx, "minutes"))
-				))))));
+				)))
+			)));
 		});
+	}
+	// public static int test(ServerCommandSource source){
+	// 	try{
+	// 		AFKPlayer afkPlayer =(AFKPlayer)source.getPlayer();
+	// 		ServerPlayerEntity player =source.getPlayer();
+	// 		Runnable r = ()->{
+	// 			// long tick = afkPlayer.getStrictLastActionTime();
+	// 			if(afkPlayer.isAfk()){
+	// 				player.sendSystemMessage(Text.of("afk"), Util.NIL_UUID);
+	// 			}else{
+	// 				player.sendSystemMessage(Text.of("Notafk"), Util.NIL_UUID);
+	// 			}
+	// 		};
+	// 		executer.scheduleAtFixedRate(r, 10, 100, TimeUnit.MILLISECONDS);
+	// 	}catch(Exception e){e.printStackTrace();}
+	// 	return Command.SINGLE_SUCCESS;
+	// }
+	// public void onShutdown(MinecraftServer server){
+	// 	executer.shutdown();
+	// }
+	public void init(MinecraftServer server){
+		SERVER=server;
 	}
 	public static int sendplaytime(ServerCommandSource source){
 		try{

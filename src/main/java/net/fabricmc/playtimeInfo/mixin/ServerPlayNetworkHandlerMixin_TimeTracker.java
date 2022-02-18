@@ -19,7 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 abstract class ServerPlayNetworkHandlerMixin_TimeTracker {
     @Shadow public ServerPlayerEntity player;
     @Unique private long lastTickTime = Util.getMeasuringTimeMs();    
-    @Unique private final long afkTime = 60000L*5L; //5 minutes
+    @Unique private final long afkTime = 60000L*3L; //3 minutes
+    // @Unique private final long afkTime = 15000L;
 
     @Inject(
         method = "tick",
@@ -34,7 +35,7 @@ abstract class ServerPlayNetworkHandlerMixin_TimeTracker {
         if(!afkPlayer.isAfk()){
             if(afkPlayer.getStrictLastActionTime() > 0L &&nowTickTime - afkPlayer.getStrictLastActionTime() >this.afkTime){
                 afkPlayer.setAfk(true);
-                afkPlayer.setPlaytime(afkPlayer.getPlaytime() - this.afkTime); // removes last 5 afk minutes of playtime
+                afkPlayer.setPlaytime(afkPlayer.getPlaytime() - this.afkTime); // removes last afk minutes of playtime
                 afkPlayer.setTempPlaytime(afkPlayer.getTempPlaytime() - this.afkTime);
                 this.player.server.getPlayerManager().sendToAll(
                     new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, this.player)
@@ -57,7 +58,8 @@ abstract class ServerPlayNetworkHandlerMixin_TimeTracker {
             )
     )
     private void updateLastActionTime(PlayerMoveC2SPacket packet, CallbackInfo ci) {
-        if (packet instanceof PlayerMoveC2SPacket.LookAndOnGround) {
+        if (packet instanceof PlayerMoveC2SPacket.Full
+            ||packet instanceof PlayerMoveC2SPacket.LookAndOnGround) {
             ((AFKPlayer) this.player).setStrictLastActionTime(Util.getMeasuringTimeMs());
             if (((AFKPlayer) this.player).isAfk()) {
                 ((AFKPlayer) this.player).setAfk(false);
