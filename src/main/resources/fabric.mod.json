@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "message-broadcast-mod",
+  "id": "serverrules-mod",
   "version": "${version}",
 
   "name": "MessageBroadcastMod",
@@ -19,11 +19,9 @@
   "environment": "*",
   "entrypoints": {
     "server": [
-      "net.fabricmc.messagebroadcast.MessageBroadcast"
+      "net.fabricmc.serverrules.ServerRules"
     ]
   },
-  "mixins": [
-  ],
 
   "depends": {
     "fabricloader": ">=0.12.12",

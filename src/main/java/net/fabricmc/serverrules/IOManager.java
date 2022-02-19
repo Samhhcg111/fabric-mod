@@ -1,4 +1,4 @@
-package net.fabricmc.messagebroadcast;
+package net.fabricmc.serverrules;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,16 +15,16 @@ public class IOManager {
         if(!Files.exists(Paths.get("./config"))){
             createConfigFolder();
         }
-        if(!Files.exists(Paths.get("./config/MessageBroadcastConfig.json"))){
+        if(!Files.exists(Paths.get("./config/ServerRules.json"))){
             String gson = new GsonBuilder().setPrettyPrinting().create().toJson(new ConfigInstance());
-            File file = new File("./config/MessageBroadcastConfig.json");
+            File file = new File("./config/ServerRules.json");
             write(file, gson);
         }
     }
     public static ConfigInstance readConfig(){
         ConfigInstance configInstance;
         try{
-            configInstance = new Gson().fromJson(new FileReader("./config/MessageBroadcastConfig.json"), ConfigInstance.class);
+            configInstance = new Gson().fromJson(new FileReader("./config/ServerRules.json"), ConfigInstance.class);
         }
         catch(IOException e){
             e.printStackTrace();
